@@ -1,0 +1,43 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  resourceGroupName: 'rg-vm-pipeline'
+  location: 'eastus'
+  vmName: 'pipeline-vm-01'
+  adminUsername: 'azureadmin'
+
+steps:
+
+# Step 1: Login to Azure & Create Resource Group
+- task: AzureCLI@2
+  displayName: 'Create Resource Group'
+  inputs:
+    azureSubscription: 'Azure-Prod-Connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      echo "Creating Resource Group..."
+      az group create \
+        --name $(resourceGroupName) \
+        --location $(location)
+
+# Step 2: Create Virtual Machine
+- task: AzureCLI@2
+  displayName: 'Create Linux Virtual Machine'
+  inputs:
+    azureSubscription: 'Azure-Prod-Connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      echo "Creating Virtual Machine..."
+      az vm create \
+        --resource-group $(resourceGroupName) \
+        --name $(vmName) \
+        --image Ubuntu2204 \
+        --admin-username $(adminUsername) \
+        --generate-ssh-keys \
+        --size Standard_B1s
