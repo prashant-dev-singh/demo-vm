@@ -6,7 +6,7 @@ pool:
 
 variables:
   resourceGroupName: 'rg-vm-pipeline'
-  location: 'eastus'
+  location: 'australiaeast'
   vmName: 'pipeline-vm-01'
   adminUsername: 'azureadmin'
 
